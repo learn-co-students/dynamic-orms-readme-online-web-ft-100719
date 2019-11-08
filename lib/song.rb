@@ -1,8 +1,7 @@
 require_relative "../config/environment.rb"
 require 'active_support/inflector'
 
-class Song
-
+class InteractiveRecord
 
   def self.table_name
     self.to_s.downcase.pluralize
@@ -19,10 +18,6 @@ class Song
       column_names << row["name"]
     end
     column_names.compact
-  end
-
-  self.column_names.each do |col_name|
-    attr_accessor col_name.to_sym
   end
 
   def initialize(options={})
@@ -53,12 +48,9 @@ class Song
     self.class.column_names.delete_if {|col| col == "id"}.join(", ")
   end
 
-  def self.find_by_name(name)
-    sql = "SELECT * FROM #{self.table_name} WHERE name = '#{name}'"
-    DB[:conn].execute(sql)
-  end
-
+def self.find_by_name(name)
+  sql = "SELECT * FROM #{self.table_name} WHERE name = ?"
+  DB[:conn].execute(sql, name)
 end
 
-
-
+end
